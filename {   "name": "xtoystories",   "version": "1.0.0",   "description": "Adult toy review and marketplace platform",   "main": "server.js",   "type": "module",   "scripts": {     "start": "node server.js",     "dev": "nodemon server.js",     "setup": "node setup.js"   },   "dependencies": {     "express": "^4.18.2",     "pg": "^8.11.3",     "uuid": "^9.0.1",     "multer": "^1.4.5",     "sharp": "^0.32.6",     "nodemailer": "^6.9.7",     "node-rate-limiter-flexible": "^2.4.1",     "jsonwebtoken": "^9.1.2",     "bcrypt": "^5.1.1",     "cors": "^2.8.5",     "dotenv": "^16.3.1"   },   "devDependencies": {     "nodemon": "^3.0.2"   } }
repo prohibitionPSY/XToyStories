@@ -1,0 +1,28 @@
+{
+  "name": "xtoystories",
+  "version": "1.0.0",
+  "description": "Adult toy review and marketplace platform",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "setup": "node setup.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "pg": "^8.11.3",
+    "uuid": "^9.0.1",
+    "multer": "^1.4.5",
+    "sharp": "^0.32.6",
+    "nodemailer": "^6.9.7",
+    "node-rate-limiter-flexible": "^2.4.1",
+    "jsonwebtoken": "^9.1.2",
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
