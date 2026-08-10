@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>xToyStories</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --white:#FFF; --off:#F8F8F8; --light:#F0F0F0; --grey:#9E9E9E; --dark:#424242; --red:#E53935; --red-light:#FFEBEE; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--white); color: var(--dark); font-family: 'Inter', sans-serif; line-height: 1.6; }
+  a { color: var(--red); text-decoration: none; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  header { background: var(--white); border-bottom: 1px solid var(--light); padding: 16px 0; position: sticky; top: 0; z-index: 40; }
+  header .container { display: flex; justify-content: space-between; align-items: center; }
+  .logo { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.5rem; color: var(--red); }
+  nav { display: flex; gap: 24px; align-items: center; }
+  nav a { color: var(--dark); font-size: 0.9rem; font-weight: 500; cursor: pointer; }
+  .btn { padding: 10px 20px; border-radius: 4px; border: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; }
+  .btn-red { background: var(--red); color: var(--white); }
+  .btn-red:hover { background: #C62828; }
+  .btn-white { background: var(--white); color: var(--red); border: 2px solid var(--red); }
+  .user-info { font-size: 0.9rem; color: var(--grey); }
+
+  .section { padding: 60px 0; }
+  .hero { background: linear-gradient(135deg, var(--off) 0%, var(--red-light) 100%); }
+  .hero .container { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: 3rem; margin-bottom: 20px; }
+  .hero p { font-size: 1.1rem; margin-bottom: 30px; }
+  .hero-img { width: 100%; aspect-ratio: 4/5; background: linear-gradient(135deg, var(--red-light), var(--white)); border-radius: 8px; }
+
+  .editor-section { background: var(--off); }
+  .editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .card { background: var(--white); border: 1px solid var(--light); border-radius: 8px; padding: 32px; }
+  .card h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 20px; }
+  .form-group { margin-bottom: 20px; }
+  .form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+  .form-group input, .form-group textarea, .form-group select {
+    width: 100%; padding: 12px; border: 1px solid var(--light); border-radius: 4px; font-family: inherit; font-size: 0.95rem;
+  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--red); }
+  .form-group textarea { resize: vertical; height: 150px; }
+
+  .image-upload { border: 2px dashed var(--light); border-radius: 8px; padding: 32px; text-align: center; cursor: pointer; }
+  .image-upload:hover { border-color: var(--red); background: var(--red-light); }
+  .image-upload input { display: none; }
+  .image-preview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+  .preview-img { position: relative; aspect-ratio: 1; background: var(--light); border-radius: 4px; overflow: hidden; }
+  .preview-img img { width: 100%; height: 100%; object-fit: cover; }
+  .preview-remove { position: absolute; top: 4px; right: 4px; background: var(--red); color: var(--white); border: none; border-radius: 4px; width: 28px; height: 28px; cursor: pointer; font-weight: 700; }
+
+  .feed-section { padding: 60px 0; }
+  .feed-title { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 40px; }
+  .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap:
