@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>xToyStories</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --white:#FFF; --off:#F8F8F8; --light:#F0F0F0; --grey:#9E9E9E; --dark:#424242; --red:#E53935; --red-light:#FFEBEE; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--white); color: var(--dark); font-family: 'Inter', sans-serif; line-height: 1.6; }
+  a { color: var(--red); text-decoration: none; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  header { background: var(--white); border-bottom: 1px solid var(--light); padding: 16px 0; position: sticky; top: 0; z-index: 40; }
+  header .container { display: flex; justify-content: space-between; align-items: center; }
+  .logo { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.5rem; color: var(--red); }
+  nav { display: flex; gap: 24px; align-items: center; }
+  nav a { color: var(--dark); font-size: 0.9rem; font-weight: 500; cursor: pointer; }
+  .btn { padding: 10px 20px; border-radius: 4px; border: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; }
+  .btn-red { background: var(--red); color: var(--white); }
+  .btn-red:hover { background: #C62828; }
+  .btn-white { background: var(--white); color: var(--red); border: 2px solid var(--red); }
+  .user-info { font-size: 0.9rem; color: var(--grey); }
+
+  .section { padding: 60px 0; }
+  .hero { background: linear-gradient(135deg, var(--off) 0%, var(--red-light) 100%); }
+  .hero .container { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: 3rem; margin-bottom: 20px; }
+  .hero p { font-size: 1.1rem; margin-bottom: 30px; }
+  .hero-img { width: 100%; aspect-ratio: 4/5; background: linear-gradient(135deg, var(--red-light), var(--white)); border-radius: 8px; }
+
+  .editor-section { background: var(--off); }
+  .editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .card { background: var(--white); border: 1px solid var(--light); border-radius: 8px; padding: 32px; }
+  .card h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 20px; }
+  .form-group { margin-bottom: 20px; }
+  .form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+  .form-group input, .form-group textarea, .form-group select {
+    width: 100%; padding: 12px; border: 1px solid var(--light); border-radius: 4px; font-family: inherit; font-size: 0.95rem;
+  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--red); }
+  .form-group textarea { resize: vertical; height: 150px; }
+
+  .image-upload { border: 2px dashed var(--light); border-radius: 8px; padding: 32px; text-align: center; cursor: pointer; }
+  .image-upload:hover { border-color: var(--red); background: var(--red-light); }
+  .image-upload input { display: none; }
+  .image-preview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+  .preview-img { position: relative; aspect-ratio: 1; background: var(--light); border-radius: 4px; overflow: hidden; }
+  .preview-img img { width: 100%; height: 100%; object-fit: cover; }
+  .preview-remove { position: absolute; top: 4px; right: 4px; background: var(--red); color: var(--white); border: none; border-radius: 4px; width: 28px; height: 28px; cursor: pointer; font-weight: 700; }
+
+  .feed-section { padding: 60px 0; }
+  .feed-title { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 40px; }
+  .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .content-card { background: var(--white); border: 1px solid var(--light); border-radius: 8px; overflow: hidden; }
+  .content-card:hover { border-color: var(--red); box-shadow: 0 8px 24px rgba(229,57,53,0.1); }
+  .content-card-img { width: 100%; aspect-ratio: 16/9; background: var(--light); display: flex; align-items: center; justify-content: center; }
+  .content-card-img img { width: 100%; height: 100%; object-fit: cover; }
+  .content-card-body { padding: 20px; }
+  .content-card-category { display: inline-block; font-size: 0.75rem; background: var(--red-light); color: var(--red); padding: 4px 10px; border-radius: 20px; margin-bottom: 10px; font-weight: 600; }
+  .content-card-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 10px; }
+  .content-card-meta { font-size: 0.85rem; color: var(--grey); }
+
+  .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; align-items: center; justify-content: center; }
+  .modal.show { display: flex; }
+  .modal-content { background: var(--white); border-radius: 8px; padding: 40px; max-width: 500px; width: 90%; }
+  .modal-close { float: right; font-size: 1.5rem; cursor: pointer; }
+  .modal h2 { font-family: 'Playfair Display', serif; margin-bottom: 20px; }
+
+  .admin-section { background: var(--off); display: none; }
+  .admin-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 40px; }
+  .stat-card { background: var(--white); border: 1px solid var(--light); border-radius: 8px; padding: 24px; text-align: center; }
+  .stat-number { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--red); margin-bottom: 8px; }
+  .stat-label { font-size: 0.95rem; color: var(--grey); }
+
+  .alert { padding: 16px; border-radius: 4px; margin-bottom: 20px; }
+  .alert-success { background: #E8F5E9; color: #2E7D32; }
+  .alert-error { background: #FFEBEE; color: #C62828; }
+
+  @media (max-width: 768px) {
+    .editor-grid, .hero .container { grid-template-columns: 1fr; }
+    .content-grid { grid-template-columns: 1fr; }
+    nav { gap: 12px; flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="logo">x<span style="color:var(--dark);">ToyStories</span></div>
+    <nav>
+      <a href="#" onclick="scrollTo('browse')">Browse</a>
+      <a href="#" onclick="scrollTo('create')">Create</a>
+      <a href="#" id="myContentLink" onclick="scrollTo('myContent')" style="display:none;">My Content</a>
+      <a href="#" id="adminLink" onclick="toggleAdmin()" style="display:none;">Admin</a>
+      <span id="userInfo" style="display:none;" class="user-info"></span>
+      <button class="btn btn-red" id="loginBtn" onclick="showLoginModal()">Sign in</button>
+      <button class="btn btn-white" id="signupBtn" onclick="showSignupModal()">Register</button>
+      <button class="btn btn-red" id="logoutBtn" onclick="logout()" style="display:none;">Logout</button>
+    </nav>
+  </div>
+</header>
+
+<section class="hero section">
+  <div class="container">
+    <div>
+      <h1>Share Your Story</h1>
+      <p>Write detailed reviews, upload images, and help the community make informed decisions.</p>
+      <button class="btn btn-red" onclick="checkAuth(() => scrollTo('create'))">Start writing</button>
+    </div>
+    <div class="hero-img"></div>
+  </div>
+</section>
+
+<section class="editor-section section" id="create">
+  <div class="container">
+    <h2 style="font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 40px;">Create Content</h2>
+    <div class="editor-grid">
+      <div class="card">
+        <h3>✍ Write Review</h3>
+        <div id="reviewAlert"></div>
+        <form id="reviewForm">
+          <div class="form-group">
+            <label>Product name *</label>
+            <input type="text" name="productName" placeholder="e.g. Chorus Two" required />
+          </div>
+          <div class="form-group">
+            <label>Manufacturer</label>
+            <input type="text" name="manufacturer" placeholder="e.g. We-Vibe" />
+          </div>
+          <div class="form-group">
+            <label>Price (USD)</label>
+            <input type="number" name="price" step="0.01" placeholder="169.99" />
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            <select name="category">
+              <option value="">Select...</option>
+              <option value="for-her">For Her</option>
+              <option value="for-him">For Him</option>
+              <option value="couples">Couples</option>
+              <option value="anal">Anal</option>
+              <option value="g-spot">G-Spot</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Rating *</label>
+            <select name="rating" required>
+              <option value="">Select...</option>
+              <option value="5">★★★★★ (5 stars)</option>
+              <option value="4">★★★★☆ (4 stars)</option>
+              <option value="3">★★★☆☆ (3 stars)</option>
+              <option value="2">★★☆☆☆ (2 stars)</option>
+              <option value="1">★☆☆☆☆ (1 star)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Your review *</label>
+            <textarea name="reviewText" placeholder="Share details, what you liked, what you didn't..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-red" style="width:100%;">Publish review</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3>📸 Add Article</h3>
+        <div id="articleAlert"></div>
+        <form id="contentForm">
+          <div class="form-group">
+            <label>Title *</label>
+            <input type="text" name="title" placeholder="e.g. Best Quiet Vibrators of 2024" required />
+          </div>
+          <div class="form-group">
+            <label>Type</label>
+            <select name="contentType">
+              <option value="article">Article</option>
+              <option value="guide">Guide</option>
+              <option value="comparison">Comparison</option>
+              <option value="wellness">Wellness</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Content *</label>
+            <textarea name="text" placeholder="Write your full article here..." required></textarea>
+          </div>
+          <div class="form-group">
+            <label>Upload images</label>
+            <div class="image-upload" id="imageUpload">
+              <p>📸 Drag or click</p>
+              <input type="file" id="imageInput" multiple accept="image/*" />
+            </div>
+            <div class="image-preview" id="imagePreview"></div>
+          </div>
+          <button type="submit" class="btn btn-red" style="width:100%;">Publish article</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="feed-section section" id="browse">
+  <div class="container">
+    <h2 class="feed-title">Latest Content</h2>
+    <div class="content-grid" id="contentFeed"></div>
+  </div>
+</section>
+
+<section class="section" id="myContent" style="display:none;">
+  <div class="container">
+    <h2 style="font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 40px;">Your Submissions</h2>
+    <table style="width:100%; border-collapse: collapse; border: 1px solid var(--light);">
+      <thead>
+        <tr style="background: var(--light);">
+          <th style="padding: 16px; text-align: left;">Title</th>
+          <th style="padding: 16px; text-align: left;">Type</th>
+          <th style="padding: 16px; text-align: left;">Status</th>
+          <th style="padding: 16px; text-align: left;">Date</th>
+        </tr>
+      </thead>
+      <tbody id="submissionsBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="admin-section section" id="adminSection">
+  <div class="container">
+    <h2 style="font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 30px;">Admin Dashboard</h2>
+    <div class="admin-stats">
+      <div class="stat-card">
+        <div class="stat-number" id="statPending">0</div>
+        <div class="stat-label">Pending</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="statApproved">0</div>
+        <div class="stat-label">Approved</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="statRejected">0</div>
+        <div class="stat-label">Rejected</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="statRate">0%</div>
+        <div class="stat-label">Approval Rate</div>
+      </div>
+    </div>
+    <div id="moderationQueue"></div>
+  </div>
+</section>
+
+<!-- Auth Modals -->
+<div class="modal" id="loginModal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeModal('loginModal')">×</span>
+    <h2>Sign in</h2>
+    <form id="loginForm">
+      <div class="form-group">
+        <label>Email *</label>
+        <input type="email" name="email" placeholder="your@email.com" required />
+      </div>
+      <div class="form-group">
+        <label>Password *</label>
+        <input type="password" name="password" placeholder="••••••••" required />
+      </div>
+      <button type="submit" class="btn btn-red" style="width:100%; padding: 12px; margin-top: 20px;">Sign in</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal" id="signupModal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeModal('signupModal')">×</span>
+    <h2>Create Account</h2>
+    <form id="signupForm">
+      <div class="form-group">
+        <label>Email *</label>
+        <input type="email" name="email" placeholder="your@email.com" required />
+      </div>
+      <div class="form-group">
+        <label>Password *</label>
+        <input type="password" name="password" placeholder="8+ characters" required />
+      </div>
+      <div class="form-group">
+        <label>Display name (optional)</label>
+        <input type="text" name="handle" placeholder="Your username" />
+      </div>
+      <button type="submit" class="btn btn-red" style="width:100%; padding: 12px; margin-top: 20px;">Create Account</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  const API_URL = 'http://localhost:3000';
+  let currentUser = null;
+  let uploadedFiles = [];
+
+  // Auth
+  function getToken() { return localStorage.getItem('token'); }
+  function setToken(token, userId, handle) {
+    localStorage.setItem('token', token);
+    localStorage.setItem('userId', userId);
+    localStorage.setItem('handle', handle);
+  }
+  function logout() {
+    localStorage.clear();
+    currentUser = null;
+    location.reload();
+  }
+  function checkAuth(callback) {
+    if (getToken()) callback();
+    else showLoginModal();
+  }
+
+  // Initialize
+  window.addEventListener('load', () => {
+    const token = getToken();
+    if (token) {
+      currentUser = { userId: localStorage.getItem('userId'), handle: localStorage.getItem('handle') };
+      document.getElementById('loginBtn').style.display = 'none';
+      document.getElementById('signupBtn').style.display = 'none';
+      document.getElementById('logoutBtn').style.display = 'inline';
+      document.getElementById('userInfo').style.display = 'inline';
+      document.getElementById('userInfo').textContent = `Welcome, ${currentUser.handle}`;
+      document.getElementById('myContentLink').style.display = 'inline';
+      loadSubmissions();
+    }
+    loadContent();
+  });
+
+  // Auth forms
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const { email, password } = Object.fromEntries(new FormData(e.target));
+    try {
+      const res = await fetch(`${API_URL}/api/auth/signin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setToken(data.token, data.userId, data.handle);
+        closeModal('loginModal');
+        location.reload();
+      } else {
+        alert(data.error || 'Login failed');
+      }
+    } catch (err) {
+      alert('Login error: ' + err.message);
+    }
+  });
+
+  document.getElementById('signupForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const { email, password, handle } = Object.fromEntries(new FormData(e.target));
+    try {
+      const res = await fetch(`${API_URL}/api/auth/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, handle })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setToken(data.token, data.userId, data.handle);
+        closeModal('signupModal');
+        location.reload();
+      } else {
+        alert(data.error || 'Signup failed');
+      }
+    } catch (err) {
+      alert('Signup error: ' + err.message);
+    }
+  });
+
+  // Review form
+  document.getElementById('reviewForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!currentUser) { showLoginModal(); return; }
+    const formData = new FormData();
+    const data = Object.fromEntries(new FormData(e.target));
+    formData.append('productName', data.productName);
+    formData.append('manufacturer', data.manufacturer);
+    formData.append('price', data.price);
+    formData.append('category', data.category);
+    formData.append('rating', data.rating);
+    formData.append('reviewText', data.reviewText);
+    uploadedFiles.forEach(f => formData.append('images', f));
+
+    try {
+      const res = await fetch(`${API_URL}/api/reviews`, {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + getToken() },
+        body: formData
+      });
+      if (res.ok) {
+        showAlert('reviewAlert', 'Review submitted for moderation!', 'success');
+        e.target.reset();
+        uploadedFiles = [];
+        document.getElementById('imagePreview').innerHTML = '';
+        setTimeout(() => location.reload(), 2000);
+      } else {
+        const err = await res.json();
+        showAlert('reviewAlert', err.error, 'error');
+      }
+    } catch (err) {
+      showAlert('reviewAlert', 'Error: ' + err.message, 'error');
+    }
+  });
+
+  // Article form
+  document.getElementById('contentForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!currentUser) { showLoginModal(); return; }
+    const formData = new FormData();
+    const data = Object.fromEntries(new FormData(e.target));
+    formData.append('title', data.title);
+    formData.append('contentType', data.contentType);
+    formData.append('text', data.text);
+    uploadedFiles.forEach(f => formData.append('images', f));
+
+    try {
+      const res = await fetch(`${API_URL}/api/content`, {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + getToken() },
+        body: formData
+      });
+      if (res.ok) {
+        showAlert('articleAlert', 'Article submitted for moderation!', 'success');
+        e.target.reset();
+        uploadedFiles = [];
+        document.getElementById('imagePreview').innerHTML = '';
+        setTimeout(() => location.reload(), 2000);
+      } else {
+        const err = await res.json();
+        showAlert('articleAlert', err.error, 'error');
+      }
+    } catch (err) {
+      showAlert('articleAlert', 'Error: ' + err.message, 'error');
+    }
+  });
+
+  // Image upload
+  document.getElementById('imageUpload').addEventListener('click', () => document.getElementById('imageInput').click());
+  document.getElementById('imageInput').addEventListener('change', (e) => handleImages(e.target.files));
+  document.getElementById('imageUpload').addEventListener('dragover', (e) => { e.preventDefault(); e.currentTarget.style.borderColor = 'var(--red)'; });
+  document.getElementById('imageUpload').addEventListener('dragleave', (e) => { e.currentTarget.style.borderColor = 'var(--light)'; });
+  document.getElementById('imageUpload').addEventListener('drop', (e) => { e.preventDefault(); e.currentTarget.style.borderColor = 'var(--light)'; handleImages(e.dataTransfer.files); });
+
+  function handleImages(files) {
+    if (uploadedFiles.length + files.length > 6) { alert('Max 6 images'); return; }
+    Array.from(files).forEach(f => {
+      if (f.size > 10*1024*1024) { alert(f.name + ' too large'); return; }
+      uploadedFiles.push(f);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const thumb = document.createElement('div');
+        thumb.className = 'preview-img';
+        thumb.innerHTML = `<img src="${e.target.result}" /><button type="button" class="preview-remove">×</button>`;
+        thumb.querySelector('button').onclick = (evt) => { evt.preventDefault(); uploadedFiles = uploadedFiles.filter(x => x !== f); thumb.remove(); };
+        document.getElementById('imagePreview').appendChild(thumb);
+      };
+      reader.readAsDataURL(f);
+    });
+  }
+
+  // Load content
+  async function loadContent() {
+    try {
+      const res = await fetch(`${API_URL}/api/reviews`);
+      const reviews = await res.json();
+      const res2 = await fetch(`${API_URL}/api/content`);
+      const articles = await res2.json();
+      const all = [...reviews, ...articles].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 9);
+      
+      const feed = document.getElementById('contentFeed');
+      feed.innerHTML = '';
+      all.forEach(item => {
+        const img = item.images && item.images[0] ? item.images[0] : '';
+        feed.innerHTML += `
+          <div class="content-card">
+            <div class="content-card-img">${img ? `<img src="${img}" />` : 'No image'}</div>
+            <div class="content-card-body">
+              <span class="content-card-category">${item.category || item.content_type || 'Review'}</span>
+              <h3 class="content-card-title">${item.product_name || item.title}</h3>
+              <p style="font-size:0.9rem; margin-bottom:10px;">${(item.text || item.review_text || '').substring(0, 100)}...</p>
+              <div class="content-card-meta"><strong>${item.handle}</strong> · ${new Date(item.created_at).toLocaleDateString()}</div>
+            </div>
+          </div>
+        `;
+      });
+    } catch (err) {
+      console.error('Load content error:', err);
+    }
+  }
+
+  // Load user submissions
+  async function loadSubmissions() {
+    if (!currentUser) return;
+    try {
+      const res = await fetch(`${API_URL}/api/reviews/${currentUser.userId}`, {
+        headers: { 'Authorization': 'Bearer ' + getToken() }
+      });
+      const reviews = await res.json();
+      const res2 = await fetch(`${API_URL}/api/content/${currentUser.userId}`, {
+        headers: { 'Authorization': 'Bearer ' + getToken() }
+      });
+      const articles = await res2.json();
+      const all = [...reviews, ...articles];
+      
+      const tbody = document.getElementById('submissionsBody');
+      tbody.innerHTML = '';
+      all.forEach(item => {
+        tbody.innerHTML += `
+          <tr style="border-top: 1px solid var(--light);">
+            <td style="padding: 16px;">${item.product_name || item.title}</td>
+            <td style="padding: 16px;">${item.category || item.content_type || 'Review'}</td>
+            <td style="padding: 16px;"><span style="background: ${item.status === 'approved' ? '#E8F5E9' : item.status === 'rejected' ? '#FFEBEE' : '#FFF3E0'}; color: ${item.status === 'approved' ? '#2E7D32' : item.status === 'rejected' ? '#C62828' : '#E65100'}; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">${item.status}</span></td>
+            <td style="padding: 16px;">${new Date(item.created_at).toLocaleDateString()}</td>
+          </tr>
+        `;
+      });
+    } catch (err) {
+      console.error('Load submissions error:', err);
+    }
+  }
+
+  // Admin
+  function toggleAdmin() {
+    const token = getToken();
+    const adminToken = prompt('Enter admin token:');
+    if (adminToken) {
+      localStorage.setItem('adminToken', adminToken);
+      document.getElementById('adminSection').style.display = 'block';
+      loadAdminStats();
+    }
+  }
+
+  async function loadAdminStats() {
+    const adminToken = localStorage.getItem('adminToken');
+    if (!adminToken) return;
+    try {
+      const res = await fetch(`${API_URL}/api/admin/stats`, {
+        headers: { 'X-Admin-Token': adminToken }
+      });
+      const stats = await res.json();
+      document.getElementById('statPending').textContent = stats.pending_count;
+      document.getElementById('statApproved').textContent = stats.approved_count;
+      document.getElementById('statRejected').textContent = stats.rejected_count;
+      document.getElementById('statRate').textContent = stats.approval_rate + '%';
+    } catch (err) {
+      console.error('Admin stats error:', err);
+    }
+  }
+
+  // Helpers
+  function showLoginModal() { document.getElementById('loginModal').classList.add('show'); }
+  function showSignupModal() { document.getElementById('signupModal').classList.add('show'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+  function showAlert(elementId, message, type) {
+    const el = document.getElementById(elementId);
+    el.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+  }
+  function scrollTo(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
