@@ -1,2 +1,2 @@
 # XToyStories
-Sex toys review platform
+Sex toys review site
